@@ -350,6 +350,16 @@ pipeline{
             }
         }
     }
+    post {
+      always {
+        emailext attachLog: true,
+        body: "Project: ${env.JOb_NAME}<br/>" +
+              "Build Number: ${env.BUILD_NUMBER}<br/>" +
+              "URL: ${env.BUILD_URL}<br/>",
+        to: "admin@gmail.com",
+        attachmentsPattern: "trivyfs.txt,trivyimage.txt"
+      }
+    }
 }
 
 
@@ -540,6 +550,11 @@ sudo systemctl restart jenkins
        metrics_path: '/prometheus'
        static_configs:
          - targets: ['<your-jenkins-ip>:<your-jenkins-port>']
+
+     - job_name: 'k8s'
+       metrics_path: '/metrics'
+       static_configs:
+         - targets: ['<your-k8s-node-ip>:9100']   
    ```
 
    Make sure to replace `<your-jenkins-ip>` and `<your-jenkins-port>` with the appropriate values for your Jenkins setup.
